@@ -475,6 +475,10 @@ namespace LINEChannelConnector
                         var leaveActivity = HandleLeave(((LeaveEvent)ev), ev.Source.UserId);
                         activities.Add(leaveActivity);
                         break;
+                    case WebhookEventType.Postback:
+                        var postbackActivity = HandlePostback(((PostbackEvent)ev), ev.Source.UserId);
+                        activities.Add(postbackActivity);
+                        break;
                 }
             }
 
@@ -576,6 +580,20 @@ namespace LINEChannelConnector
             var activity = GetActivityBase(userId);
             activity.ChannelData = ev;
             activity.Text = "leave";
+            return activity;
+        }
+
+        /// <summary>
+        /// Handles Postback event
+        /// </summary>
+        /// <param name="ev">PostbackEvent</param>
+        /// <param name="userId">UserId</param>
+        /// <returns>IMessageActivity</returns>
+        private IMessageActivity HandlePostback(PostbackEvent ev, string userId)
+        {
+            var activity = GetActivityBase(userId);
+            activity.ChannelData = ev;
+            activity.Text = "postback";
             return activity;
         }
 

@@ -360,14 +360,17 @@ namespace LINEChannelConnector
             }
             else if (!string.IsNullOrEmpty(activity.Text))
             {
-                if (activity.Text.Contains("\n\n*"))
+                if (activity.Text.Contains("|"))
                 {
-                    var lines = activity.Text.Split(new[] { "\n\n" }, StringSplitOptions.RemoveEmptyEntries);
+                    var lines = activity.Text.Split(new[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
                     ButtonsTemplate buttonsTemplate = new ButtonsTemplate(text: lines[0]);
 
                     foreach (var line in lines.Skip(1))
                     {
-                        buttonsTemplate.Actions.Add(new PostbackTemplateAction(line, line.Replace("* ", ""), line.Replace("* ", "")));
+                        var item = line.Split(new[] { ":" }, StringSplitOptions.RemoveEmptyEntries);
+                        var label = item.FirstOrDefault();
+                        var data = item.LastOrDefault();
+                        buttonsTemplate.Actions.Add(new PostbackTemplateAction(label, data, data));
                     }
 
                     messages.Add(new TemplateMessage("Buttons template", buttonsTemplate));
